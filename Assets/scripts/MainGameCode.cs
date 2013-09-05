@@ -5,9 +5,15 @@ public enum GAMESTATE { TITLE, PLAY, GAMEOVER, SETTINGS };
 
 public class MainGameCode : MonoBehaviour {
 	
+	static GameObject king=null;
+	
 	public static GAMESTATE gamestate=GAMESTATE.TITLE;
 
 	// Use this for initialization
+	void Awake() {
+		if (king==null) king=GameObject.Find("King");
+	}	
+	
 	void Start () {
 	
 	}
@@ -23,6 +29,16 @@ public class MainGameCode : MonoBehaviour {
 	}
 	
 	public static void ResetGame() {
+		king.transform.position=new Vector3(0,23,450);
+		king.transform.eulerAngles=new Vector3(0,0,0);
 		gamestate=GAMESTATE.TITLE;	
+	}	
+	
+	public static void PlayGame() {
+		gamestate=GAMESTATE.PLAY;	
+	}
+	
+	public static void GameOver() {
+		gamestate=GAMESTATE.GAMEOVER;	
 	}	
 }

@@ -22,7 +22,6 @@ public class GUICode : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-
 	}
 	
 	// Update is called once per frame
@@ -30,7 +29,7 @@ public class GUICode : MonoBehaviour {
 		switch (MainGameCode.gamestate) {
 			case GAMESTATE.TITLE:
 				if (Input.GetMouseButtonDown(0))  {
-					MainGameCode.gamestate=GAMESTATE.PLAY;
+					MainGameCode.PlayGame();
 				}			
 			break;
 			case GAMESTATE.GAMEOVER:
@@ -38,10 +37,16 @@ public class GUICode : MonoBehaviour {
 					MainGameCode.ResetGame();
 				}			
 			break;
-		}	
+		}
+		//cursor hide and show
+		if (Input.GetKey(KeyCode.LeftControl) || MainGameCode.gamestate!=GAMESTATE.PLAY) {
+			Screen.showCursor=true;	
+		}
+		else  {
+			Screen.showCursor=false;	
+		}		
 		
-	}
-	
+	}		
 	
 	void OnGUI() {
 		switch (MainGameCode.gamestate) {
@@ -49,7 +54,7 @@ public class GUICode : MonoBehaviour {
 				DrawTitle();
 			break;
 			case GAMESTATE.PLAY:
-				DrawSettingsButton();
+				GameSettings();
 			break;
 			case GAMESTATE.SETTINGS:
 				DrawSettingsWindow();
@@ -70,6 +75,10 @@ public class GUICode : MonoBehaviour {
 		ShadowAndOutline.DrawOutline(new Rect(0,Screen.height*.25f,Screen.width,Screen.height*.5f),"Catapult!",titleStyle,Color.black,Color.white,2f);
 		if ((float.Parse(Time.time.ToString("0.0"))) % 3<2.5f)
 		ShadowAndOutline.DrawOutline(new Rect(0,Screen.height*.75f,Screen.width,Screen.height*.25f),"Click anywhere to play",instructionStyle,Color.black,Color.white,2f);
+	}	
+	
+	void GameSettings() {
+		DrawSettingsButton();
 	}	
 	
 	void DrawSettingsButton() {	
