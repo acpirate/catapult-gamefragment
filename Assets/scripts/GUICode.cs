@@ -10,6 +10,10 @@ public class GUICode : MonoBehaviour {
 	//settings button
 	int settingsButtonSize=60;
 	int settingsButtonOffset=20;
+	//settings window
+	int settingsWindowWidth=20; //percent
+	int settingsWindowHeight=50; //percent
+	
 	
 	public Texture2D settingsTexture;
 	
@@ -25,10 +29,15 @@ public class GUICode : MonoBehaviour {
 	void Update () {
 		switch (MainGameCode.gamestate) {
 			case GAMESTATE.TITLE:
-				if (Input.GetMouseButton(0))  {
+				if (Input.GetMouseButtonDown(0))  {
 					MainGameCode.gamestate=GAMESTATE.PLAY;
 				}			
-			break;			
+			break;
+			case GAMESTATE.GAMEOVER:
+				if (Input.GetMouseButtonDown(0))  {
+					MainGameCode.ResetGame();
+				}			
+			break;
 		}	
 		
 	}
@@ -42,7 +51,19 @@ public class GUICode : MonoBehaviour {
 			case GAMESTATE.PLAY:
 				DrawSettingsButton();
 			break;
+			case GAMESTATE.SETTINGS:
+				DrawSettingsWindow();
+			break;
+			case GAMESTATE.GAMEOVER:
+				DrawGameOver();
+			break;			
 		}	
+	}	
+	
+	void DrawGameOver() {
+		ShadowAndOutline.DrawOutline(new Rect(0,Screen.height*.25f,Screen.width,Screen.height*.5f),"Game Over",titleStyle,Color.black,Color.white,2f);
+		if ((float.Parse(Time.time.ToString("0.0"))) % 3<2.5f)
+		ShadowAndOutline.DrawOutline(new Rect(0,Screen.height*.75f,Screen.width,Screen.height*.25f),"Click anywhere to go back to title",instructionStyle,Color.black,Color.white,2f);	
 	}	
 	
 	void DrawTitle() {
@@ -56,6 +77,26 @@ public class GUICode : MonoBehaviour {
 			settingsTexture)) 
 			MainGameCode.gamestate=GAMESTATE.SETTINGS;
 		
+	}	
+	
+	void DrawSettingsWindow() {
+		/*GUI.Box(new Rect(Screen.width*.5f-Screen.width*.5f*.01f*settingsWindowWidth,
+						 Screen.height*.5f-Screen.height*.5f*.01f*settingsWindowHeight,
+						 Screen.width*.01f*settingsWindowWidth,
+						 Screen.height*.01f*settingsWindowHeight),
+				"");*/
+
+		GUILayout.BeginArea(new Rect(Screen.width*.5f-Screen.width*.5f*.01f*settingsWindowWidth,
+						 Screen.height*.5f-Screen.height*.5f*.01f*settingsWindowHeight,
+						 Screen.width*.01f*settingsWindowWidth,
+						 Screen.height*.01f*settingsWindowHeight));
+		if (GUILayout.Button("Back To Game")) 
+			MainGameCode.gamestate=GAMESTATE.PLAY;
+		if (GUILayout.Button("Quit Game")) 
+			MainGameCode.QuitGame();
+		
+		
+		GUILayout.EndArea();
 	}	
 	
 }

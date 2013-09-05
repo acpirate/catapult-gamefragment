@@ -16,4 +16,13 @@ public class MainGameCode : MonoBehaviour {
 	void Update () {
 	
 	}
+	
+	
+	public static void QuitGame() {
+		gamestate=GAMESTATE.GAMEOVER;
+	}
+	
+	public static void ResetGame() {
+		gamestate=GAMESTATE.TITLE;	
+	}	
 }
