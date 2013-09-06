@@ -37,9 +37,15 @@ public class GUICode : MonoBehaviour {
 					MainGameCode.ResetGame();
 				}			
 			break;
+			case GAMESTATE.AIM:
+				if (Input.GetMouseButton(1)) {
+					MainGameCode.EndAim();
+				}
+			break;
+			
 		}
 		//cursor hide and show
-		if (Input.GetKey(KeyCode.LeftControl) || MainGameCode.gamestate!=GAMESTATE.PLAY) {
+		if (Input.GetKey(KeyCode.LeftControl) || (MainGameCode.gamestate!=GAMESTATE.PLAY && MainGameCode.gamestate!=GAMESTATE.AIM)) {
 			Screen.showCursor=true;	
 		}
 		else  {
@@ -55,12 +61,16 @@ public class GUICode : MonoBehaviour {
 			break;
 			case GAMESTATE.PLAY:
 				GameSettings();
+				PlayInstructions();
 			break;
 			case GAMESTATE.SETTINGS:
 				DrawSettingsWindow();
 			break;
 			case GAMESTATE.GAMEOVER:
 				DrawGameOver();
+			break;
+			case GAMESTATE.AIM:
+				AimInstructions();
 			break;			
 		}	
 	}	
@@ -79,6 +89,16 @@ public class GUICode : MonoBehaviour {
 	
 	void GameSettings() {
 		DrawSettingsButton();
+	}	
+	
+	void PlayInstructions() {
+		Rect instructionPosition=new Rect(0,Screen.height*.9f,Screen.width,Screen.height*.10f);
+		ShadowAndOutline.DrawOutline(instructionPosition,"left ctrl to show mouse pointer, click your puck to aim",instructionStyle,Color.black,Color.white,2f);
+	}	
+	
+	void AimInstructions() {
+		Rect instructionPosition=new Rect(0,Screen.height*.8f,Screen.width,Screen.height*.10f);
+		ShadowAndOutline.DrawOutline(instructionPosition,"move mouse to turn, right click to cancel\nhold left button to power up, release left button to fire",instructionStyle,Color.black,Color.white,2f);
 	}	
 	
 	void DrawSettingsButton() {	
