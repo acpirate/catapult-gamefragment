@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class KingCode : MonoBehaviour {
-
+	
+	float stabilizeTimer=0;
+	
 	// Use this for initialization
 	void Start () {
 	
@@ -12,6 +14,17 @@ public class KingCode : MonoBehaviour {
 	void Update () {
 		//if the king gets knocked off pedestal then its gameover
 		if (transform.position.y<20) MainGameCode.GameOver();
-	
+		
+		if (stabilizeTimer>0) stabilizeTimer-=Time.deltaTime;
+		if (stabilizeTimer<0)  {
+			stabilizeTimer=0;
+			rigidbody.WakeUp(); }
+		
 	}
+	
+	public void Stabilize() {
+		rigidbody.Sleep();
+		stabilizeTimer=2;
+		
+	}	
 }

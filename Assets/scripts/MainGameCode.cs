@@ -14,13 +14,14 @@ public class MainGameCode : MonoBehaviour {
 	
 	
 	public GameObject brickPrefab;
-	int wallWidth=30;
-	int wallHeight=20;
-	float brickWidth=5f;
-	float brickHeight=2.5f;
-	float brickHeightOffset=1.73f;
-	float wallXStart=-25;
-	float wallZStart=-100;
+	static GameObject staticBrickPrefab;
+	static int wallWidth=10;
+	static int wallHeight=5;
+	static float brickWidth=20f;
+	static float brickHeight=10f;
+	static float brickHeightOffset=5.47986f;
+	static float wallXStart=-100;
+	static float wallZStart=200;
 	
 	
 	
@@ -40,6 +41,8 @@ public class MainGameCode : MonoBehaviour {
 		if (aimCamera==null) aimCamera=GameObject.Find("AimCamera");
 		if (mainCamera==null) mainCamera=GameObject.Find("Main Camera").GetComponent<Camera>();
 		
+		staticBrickPrefab=brickPrefab;
+		
 		BuildWall();
 		
 	}	
@@ -56,14 +59,13 @@ public class MainGameCode : MonoBehaviour {
 		if (puck.transform.position.y<0) ResetPuck();
 	}
 	
-	//instance methods
-	void BuildWall() {
+	static void BuildWall() {
 		for (int yCounter=0;yCounter<wallHeight;yCounter++) {
 			for (int xCounter=0;xCounter<wallWidth;xCounter++) {
 				float brickOffset=0;
 				if (yCounter%2==1) brickOffset=brickWidth/2;
 				Vector3 brickLocation=new Vector3(wallXStart+xCounter*brickWidth+brickOffset,brickHeight*yCounter+brickHeightOffset,wallZStart);
-				Instantiate(brickPrefab,brickLocation,Quaternion.identity);
+				Instantiate(staticBrickPrefab,brickLocation,Quaternion.identity);
 			}	
 		}	
 	}	
@@ -80,16 +82,24 @@ public class MainGameCode : MonoBehaviour {
 	}	
 	
 	public static void QuitGame() {
+		ClearBricks();
+		ResetKingPedestal();
 		ResetKing();
 		ResetPuck();
+		BuildWall();
 		gamestate=GAMESTATE.GAMEOVER;
 	}
 	
 	public static void ResetGame() {
-
+		QuitGame();
 		gamestate=GAMESTATE.TITLE;	
 	}	
 	
+	public static void ClearBricks() {
+		foreach(GameObject brick in GameObject.FindGameObjectsWithTag("Brick")) {
+			Destroy(brick);	
+		}	
+	}	
 	
 	
 	public static void PlayGame() {
@@ -113,17 +123,29 @@ public class MainGameCode : MonoBehaviour {
 		gamestate=GAMESTATE.PLAY;
 	}	
 	
+	public static void ResetKingPedestal() {
+		
+		GameObject tempObject=null;
+		tempObject=(GameObject) Instantiate(staticBrickPrefab,new Vector3(0,6f,245),Quaternion.identity);	
+		tempObject.rigidbody.velocity=new Vector3(0,0,0);
+		tempObject=(GameObject) Instantiate(staticBrickPrefab,new Vector3(0,17f,245),Quaternion.identity);
+		tempObject.rigidbody.velocity=new Vector3(0,0,0);
+	}	
+	
 	public static void ResetKing() {
-		king.transform.position=new Vector3(0,23,450);
-		king.transform.eulerAngles=new Vector3(0,0,0);			
+		king.rigidbody.velocity=new Vector3(0,0,0);
+		king.transform.position=new Vector3(0,27f,245);
+		king.transform.eulerAngles=new Vector3(0,0,0);
+		king.rigidbody.velocity=new Vector3(0,0,0);
+		king.GetComponent<KingCode>().Stabilize();
 	}	
 	
 	public static void ResetPuck() {
 		puck.transform.position=new Vector3(0,1.5f,puckResetLocation);
 		puck.transform.rotation=Quaternion.Euler(0,0,0);
 		puck.rigidbody.velocity=new Vector3(0,0,0);
-		mainCamera.transform.position=mainCameraStart;
-		mainCamera.transform.LookAt(puck.transform.position);
+		//mainCamera.transform.position=mainCameraStart;
+		//mainCamera.transform.LookAt(puck.transform.position);
 	}	
 	
 	public static void PowerCharge() {

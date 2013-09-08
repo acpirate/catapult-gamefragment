@@ -157,7 +157,7 @@ public class GUICode : MonoBehaviour {
 	
 	void PlayInstructions() {
 		Rect instructionPosition=new Rect(0,Screen.height*.9f,Screen.width,Screen.height*.10f);
-		ShadowAndOutline.DrawOutline(instructionPosition,"left ctrl to show mouse pointer, enter to aim puck",instructionStyle,Color.black,Color.white,2f);
+		ShadowAndOutline.DrawOutline(instructionPosition,"left ctrl to show mouse pointer, enter to aim puck\n wasd moves view, mouse looks",instructionStyle,Color.black,Color.white,2f);
 	}	
 	
 	void AimInstructions() {
